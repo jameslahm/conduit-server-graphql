@@ -9,8 +9,9 @@
     "url": "https://github.com/jameslahm/conduit-server-graphql"
   },
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "build": "tsc --build"
+    "start": "nodemon ./src/server.ts",
+    "build": "tsc --build",
+    "generate": "graphql-codegen"
   },
   "lint-staged": {
     "*.{ts,js,json}": [
@@ -24,9 +25,12 @@
     }
   },
   "dependencies": {
+    "apollo-datasource": "^0.7.2",
     "apollo-server": "^2.15.1",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.23",
     "mongoose-unique-validator": "^2.0.3",
     "slug": "^3.3.0"
@@ -34,6 +38,11 @@
   "devDependencies": {
     "@commitlint/cli": "^9.0.1",
     "@commitlint/config-conventional": "^9.0.1",
+    "@graphql-codegen/cli": "^1.16.3",
+    "@graphql-codegen/typescript": "^1.16.3",
+    "@graphql-codegen/typescript-resolvers": "^1.16.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.31",
     "@types/mongoose-unique-validator": "^1.0.4",
     "@types/node": "^14.0.22",
@@ -41,6 +50,7 @@
     "apollo": "^2.29.1",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
+    "nodeman": "^1.1.2",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "typescript": "^3.9.6"

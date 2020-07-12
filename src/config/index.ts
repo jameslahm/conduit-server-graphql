@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+import { UserDocumentType } from "../models";
 
 // Process env
 dotenv.config({
@@ -23,3 +24,7 @@ export {
   InternalServerErrorMessage,
   NotUniqueMessage,
 };
+
+export interface TContext {
+  user: UserDocumentType | undefined;
+}

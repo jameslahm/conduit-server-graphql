@@ -6,6 +6,7 @@ import uniqueValidator from "mongoose-unique-validator";
 import { NotUniqueMessage } from "../config";
 
 interface UserAuthType {
+  id: string;
   email: string;
   token: string;
   username: string;
@@ -14,6 +15,7 @@ interface UserAuthType {
 }
 
 interface UserProfileType {
+  id: string;
   username: string;
   bio: string;
   image: string;
@@ -36,6 +38,7 @@ export interface UserDocumentType extends Document {
   isFavorite: (articleId: Types.ObjectId) => boolean;
   favorite: (articleId: Types.ObjectId) => void;
   unFavorite: (articleId: Types.ObjectId) => void;
+  validatePassword: (password: string) => boolean;
 }
 
 const userSchema = new Mongoose.Schema<UserDocumentType>(
@@ -98,6 +101,7 @@ userSchema.methods.toAuthJson = function () {
     username: this.email,
     bio: this.email,
     image: this.image,
+    id: this._id,
   };
 };
 
@@ -105,6 +109,7 @@ userSchema.methods.toProfileJsonFor = function (
   user: UserDocumentType | undefined
 ) {
   return {
+    id: this._id,
     username: this.username,
     bio: this.bio,
     image: this.image,
@@ -154,6 +159,10 @@ userSchema.methods.unFavorite = async function (id) {
   } else {
     return;
   }
+};
+
+userSchema.methods.validatePassword = function (password: string) {
+  return bcrypt.compareSync(password, this.password);
 };
 
 userSchema.plugin(uniqueValidator, { message: NotUniqueMessage });

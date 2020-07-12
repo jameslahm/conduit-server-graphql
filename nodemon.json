@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "ignore": ["node_modules/**/*", ".git"],
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "delay": "3000",
+  "ext": "js,json,ts"
+}

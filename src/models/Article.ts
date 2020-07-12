@@ -20,6 +20,7 @@ export interface ArticleDocumentType extends Document {
 }
 
 export interface ArticleJsonType {
+  id: string;
   slug: string;
   title: string;
   description: string;
@@ -73,6 +74,7 @@ articleSchema.methods.toJsonFor = function (
   user: UserDocumentType | undefined
 ) {
   return {
+    id: this._id,
     slug: this.slug,
     title: this.title,
     description: this.description,
