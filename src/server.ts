@@ -6,6 +6,7 @@ import { AuthenticationMessage } from "./config";
 import { User, Article, Comment } from "./models";
 import { TContext } from "./config";
 import { DBAPI } from "./datasources";
+import { resolvers } from "./resolvers";
 import mongoose from "mongoose";
 
 dotenv.config();
@@ -22,9 +23,10 @@ mongoose
 
 const server = new ApolloServer({
   typeDefs: typedefs,
-  engine: {
-    reportSchema: true,
-  },
+  // engine: {
+  //   reportSchema: true,
+  // },
+  resolvers: resolvers as any,
   schemaDirectives: {
     auth: AuthDirective,
   },
