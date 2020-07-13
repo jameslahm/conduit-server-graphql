@@ -6,8 +6,19 @@ import { AuthenticationMessage } from "./config";
 import { User, Article, Comment } from "./models";
 import { TContext } from "./config";
 import { DBAPI } from "./datasources";
+import mongoose from "mongoose";
 
 dotenv.config();
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
+mongoose
+  .connect(process.env.MONGODBURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 const server = new ApolloServer({
   typeDefs: typedefs,

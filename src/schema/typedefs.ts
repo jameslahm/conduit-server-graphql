@@ -54,7 +54,7 @@ const typedefs = gql`
     password: String!
   }
 
-  input RegistrationInput {
+  input RegisterInput {
     email: String!
     username: String!
     password: String!
@@ -88,6 +88,13 @@ const typedefs = gql`
     tagList: [String]!
   }
 
+  input UpdateArticleInput {
+    title: String
+    description: String
+    body: String
+    tagList: [String]
+  }
+
   input AddCommentInput {
     body: String!
   }
@@ -106,14 +113,14 @@ const typedefs = gql`
 
   type Mutation {
     login(input: LoginInput!): User
-    registration(input: RegistrationInput!): User
+    register(input: RegisterInput!): User
     updateUser(input: UpdateUserInput!): User @auth
     follow(username: String!): Profile @auth
     unfollow(username: String!): Profile @auth
     createArticle(input: CreateArticleInput!): Article @auth
-    updateArticle(input: CreateArticleInput!): Article @auth
+    updateArticle(slug: String!, input: UpdateArticleInput!): Article @auth
     deleteArticle(slug: String!): Article @auth
-    addComment(input: AddCommentInput!): Comment @auth
+    addComment(slug: String!, input: AddCommentInput!): Comment @auth
     deleteComment(slug: String!, id: ID!): Comment @auth
     favoriteArticle(slug: String!): Article @auth
     unfavoriteArticle(slug: String!): Article @auth

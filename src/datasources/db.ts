@@ -11,11 +11,15 @@ import {
   GetAllArticlesInput,
   GetFeedArticlesInput,
   LoginInput,
-  RegistrationInput,
+  RegisterInput,
   UpdateUserInput,
+  CreateArticleInput,
+  UpdateArticleInput,
+  AddCommentInput,
 } from "../types/graphql";
 import { threadId } from "worker_threads";
 import { NotFoundError } from "../utils";
+import { throws } from "assert";
 
 export class DBAPI extends DataSource {
   context!: TContext;
@@ -39,7 +43,7 @@ export class DBAPI extends DataSource {
     return user;
   }
 
-  async register(args: RegistrationInput) {
+  async register(args: RegisterInput) {
     const user = await this.models.User.create(args as UserDocumentType);
     return user;
   }
@@ -118,5 +122,66 @@ export class DBAPI extends DataSource {
     } else {
       throw new NotFoundError(NotFoundMessage);
     }
+  }
+  async unfollow(username: string) {
+    const user = await this.models.User.findOne({ username: username });
+    if (user) {
+      await this.context.user?.unfollow(user);
+      return user.toProfileJsonFor(this.context.user);
+    } else {
+      throw new NotFoundError(NotFoundMessage);
+    }
+  }
+  async createArticle(args: CreateArticleInput) {
+    const article = await this.models.Article.create(
+      args as ArticleDocumentType
+    );
+    return article.toJsonFor(this.context.user);
+  }
+  async updateArticle(slug: string, input: UpdateArticleInput) {
+    const article = await this.models.Article.findOneAndUpdate(
+      { slug: slug },
+      input as ArticleDocumentType
+    );
+    if (article) return article.toJsonFor(this.context.user);
+    else {
+      throw new NotFoundError(NotFoundMessage);
+    }
+  }
+  async deleteArticle(slug: string) {
+    const article = await this.models.Article.findOneAndDelete({ slug: slug });
+    if (article) {
+      return article.toJsonFor(this.context.user);
+    } else {
+      throw new NotFoundError(NotFoundMessage);
+    }
+  }
+  async addComment(slug: string, input: AddCommentInput) {
+    const article = await this.models.Article.findOne({ slug: slug });
+    const comment = await this.models.Comment.create({
+      ...input,
+      article: article?._id,
+    } as CommentDocumentType);
+    return comment.toJsonFor(this.context.user);
+  }
+  async deleteComment(slug: string, id: string) {
+    const comment = await this.models.Comment.findByIdAndDelete(id);
+    return comment?.toJsonFor(this.context.user);
+  }
+  async favoriteArticle(slug: string) {
+    const article = await this.models.Article.findOne({ slug: slug }).populate(
+      "author"
+    );
+    await this.context.user?.favorite(article?._id);
+    await article?.updateFavoriteCount();
+    return article?.toJsonFor(this.context.user);
+  }
+  async unfavoriteArticle(slug: string) {
+    const article = await this.models.Article.findOne({ slug: slug }).populate(
+      "author"
+    );
+    await this.context.user?.unFavorite(article?._id);
+    await article?.updateFavoriteCount();
+    return article?.toJsonFor(this.context.user);
   }
 }

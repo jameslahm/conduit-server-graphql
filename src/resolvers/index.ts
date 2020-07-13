@@ -1,6 +1,7 @@
 import { Resolvers } from "../types/graphql/index";
 import { NotFoundMessage, InternalServerErrorMessage } from "../config";
 import { NotFoundError, InternalServerError } from "../utils";
+import { AddArgumentsAsVariables } from "apollo-server";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -47,7 +48,7 @@ export const resolvers: Resolvers = {
       }
       return loginUser.toAuthJson();
     },
-    async registration(source, args, { dataSources, user }, info) {
+    async register(source, args, { dataSources, user }, info) {
       const loginUser = await dataSources.dbAPI.register(args.input);
       if (!loginUser) {
         throw new InternalServerError(InternalServerErrorMessage);
@@ -67,6 +68,56 @@ export const resolvers: Resolvers = {
         return profile;
       }
       return null;
+    },
+    async unfollow(source, args, { dataSources, user }, info) {
+      const profile = await dataSources.dbAPI.unfollow(args.username);
+      if (profile) {
+        return profile;
+      }
+      return null;
+    },
+    async createArticle(source, args, { dataSources, user }, info) {
+      const article = await dataSources.dbAPI.createArticle(args.input);
+      return article;
+    },
+    async updateArticle(source, args, { dataSources, user }, info) {
+      const article = await dataSources.dbAPI.updateArticle(
+        args.slug,
+        args.input
+      );
+      return article;
+    },
+    async deleteArticle(source, args, { dataSources, user }, info) {
+      const article = await dataSources.dbAPI.deleteArticle(args.slug);
+      return article;
+    },
+    async addComment(source, args, { dataSources, user }, info) {
+      const comment = await dataSources.dbAPI.addComment(args.slug, args.input);
+      return comment;
+    },
+    async deleteComment(source, args, { dataSources, user }, info) {
+      const comment = await dataSources.dbAPI.deleteComment(args.slug, args.id);
+      if (comment) {
+        return comment;
+      } else {
+        return null;
+      }
+    },
+    async favoriteArticle(source, args, { dataSources, user }, info) {
+      const article = await dataSources.dbAPI.favoriteArticle(args.slug);
+      if (article) {
+        return article;
+      } else {
+        return null;
+      }
+    },
+    async unfavoriteArticle(source, args, { dataSources, user }, info) {
+      const article = await dataSources.dbAPI.unfavoriteArticle(args.slug);
+      if (article) {
+        return article;
+      } else {
+        return null;
+      }
     },
   },
 };

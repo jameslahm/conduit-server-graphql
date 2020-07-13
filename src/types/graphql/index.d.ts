@@ -79,7 +79,7 @@ export type LoginInput = {
   password: Scalars["String"];
 };
 
-export type RegistrationInput = {
+export type RegisterInput = {
   email: Scalars["String"];
   username: Scalars["String"];
   password: Scalars["String"];
@@ -111,6 +111,13 @@ export type CreateArticleInput = {
   description: Scalars["String"];
   body: Scalars["String"];
   tagList: Array<Maybe<Scalars["String"]>>;
+};
+
+export type UpdateArticleInput = {
+  title?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
+  body?: Maybe<Scalars["String"]>;
+  tagList?: Maybe<Array<Maybe<Scalars["String"]>>>;
 };
 
 export type AddCommentInput = {
@@ -147,7 +154,7 @@ export type QueryGetArticleArgs = {
 export type Mutation = {
   __typename?: "Mutation";
   login?: Maybe<User>;
-  registration?: Maybe<User>;
+  register?: Maybe<User>;
   updateUser?: Maybe<User>;
   follow?: Maybe<Profile>;
   unfollow?: Maybe<Profile>;
@@ -164,8 +171,8 @@ export type MutationLoginArgs = {
   input: LoginInput;
 };
 
-export type MutationRegistrationArgs = {
-  input: RegistrationInput;
+export type MutationRegisterArgs = {
+  input: RegisterInput;
 };
 
 export type MutationUpdateUserArgs = {
@@ -185,7 +192,8 @@ export type MutationCreateArticleArgs = {
 };
 
 export type MutationUpdateArticleArgs = {
-  input: CreateArticleInput;
+  slug: Scalars["String"];
+  input: UpdateArticleInput;
 };
 
 export type MutationDeleteArticleArgs = {
@@ -193,6 +201,7 @@ export type MutationDeleteArticleArgs = {
 };
 
 export type MutationAddCommentArgs = {
+  slug: Scalars["String"];
   input: AddCommentInput;
 };
 
@@ -340,11 +349,12 @@ export type ResolversTypes = {
   Comment: ResolverTypeWrapper<Comment>;
   MultipleComments: ResolverTypeWrapper<MultipleComments>;
   LoginInput: LoginInput;
-  RegistrationInput: RegistrationInput;
+  RegisterInput: RegisterInput;
   UpdateUserInput: UpdateUserInput;
   GetAllArticlesInput: GetAllArticlesInput;
   GetFeedArticlesInput: GetFeedArticlesInput;
   CreateArticleInput: CreateArticleInput;
+  UpdateArticleInput: UpdateArticleInput;
   AddCommentInput: AddCommentInput;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -365,11 +375,12 @@ export type ResolversParentTypes = {
   Comment: Comment;
   MultipleComments: MultipleComments;
   LoginInput: LoginInput;
-  RegistrationInput: RegistrationInput;
+  RegisterInput: RegisterInput;
   UpdateUserInput: UpdateUserInput;
   GetAllArticlesInput: GetAllArticlesInput;
   GetFeedArticlesInput: GetFeedArticlesInput;
   CreateArticleInput: CreateArticleInput;
+  UpdateArticleInput: UpdateArticleInput;
   AddCommentInput: AddCommentInput;
   Query: {};
   Mutation: {};
@@ -515,11 +526,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationLoginArgs, "input">
   >;
-  registration?: Resolver<
+  register?: Resolver<
     Maybe<ResolversTypes["User"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationRegistrationArgs, "input">
+    RequireFields<MutationRegisterArgs, "input">
   >;
   updateUser?: Resolver<
     Maybe<ResolversTypes["User"]>,
@@ -549,7 +560,7 @@ export type MutationResolvers<
     Maybe<ResolversTypes["Article"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationUpdateArticleArgs, "input">
+    RequireFields<MutationUpdateArticleArgs, "slug" | "input">
   >;
   deleteArticle?: Resolver<
     Maybe<ResolversTypes["Article"]>,
@@ -561,7 +572,7 @@ export type MutationResolvers<
     Maybe<ResolversTypes["Comment"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationAddCommentArgs, "input">
+    RequireFields<MutationAddCommentArgs, "slug" | "input">
   >;
   deleteComment?: Resolver<
     Maybe<ResolversTypes["Comment"]>,
