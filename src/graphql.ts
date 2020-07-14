@@ -77,7 +77,7 @@ const server = new ApolloServer({
 
 const func = server.createHandler({
   cors: {
-    origin: "*",
+    origin: true,
     credentials: true,
   },
 });
