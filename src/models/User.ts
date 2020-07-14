@@ -98,7 +98,7 @@ userSchema.methods.toAuthJson = function () {
   return {
     email: this.email,
     token: this.generateJwtToken(),
-    username: this.email,
+    username: this.username,
     bio: this.email,
     image: this.image,
     id: this._id,

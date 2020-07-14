@@ -107,7 +107,7 @@ const typedefs = gql`
     getAllArticles(input: GetAllArticlesInput!): MultipleArticles
     getFeedArticles(input: GetFeedArticlesInput!): MultipleArticles @auth
     getArticle(slug: String!): Article
-    getComments: MultipleComments
+    getComments(slug: String): MultipleComments
     getTags: [String]
   }
 
@@ -121,7 +121,7 @@ const typedefs = gql`
     updateArticle(slug: String!, input: UpdateArticleInput!): Article @auth
     deleteArticle(slug: String!): Article @auth
     addComment(slug: String!, input: AddCommentInput!): Comment @auth
-    deleteComment(slug: String!, id: ID!): Comment @auth
+    deleteComment(id: ID!): Comment @auth
     favoriteArticle(slug: String!): Article @auth
     unfavoriteArticle(slug: String!): Article @auth
   }

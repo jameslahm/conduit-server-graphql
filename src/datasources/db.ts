@@ -20,6 +20,7 @@ import {
 import { threadId } from "worker_threads";
 import { NotFoundError } from "../utils";
 import { throws } from "assert";
+import { off } from "process";
 
 export class DBAPI extends DataSource {
   context!: TContext;
@@ -57,7 +58,7 @@ export class DBAPI extends DataSource {
     const queryArgs: {
       author?: string;
       _id?: any;
-      tag?: any;
+      tagList?: any;
     } = {};
     const limit = args.limit ? args.limit : 20;
     const offset = args.offset ? args.offset : 0;
@@ -66,7 +67,7 @@ export class DBAPI extends DataSource {
       const user = await this.getProfile(author);
       if (user) queryArgs.author = user.id;
     }
-    if (args.tag) queryArgs.tag = { $in: [args.tag] };
+    if (args.tag) queryArgs.tagList = { $in: [args.tag] };
     const favorited = args.favorited;
     if (favorited) {
       const favoriter = await this.models.User.findOne({ username: favorited });
@@ -102,7 +103,9 @@ export class DBAPI extends DataSource {
     };
   }
   async getArticle(slug: string) {
-    const article = await this.models.Article.findOne({ slug: slug });
+    const article = await this.models.Article.findOne({ slug: slug }).populate(
+      "author"
+    );
     return article?.toJsonFor(this.context.user);
   }
   async getTags() {
@@ -133,9 +136,10 @@ export class DBAPI extends DataSource {
     }
   }
   async createArticle(args: CreateArticleInput) {
-    const article = await this.models.Article.create(
-      args as ArticleDocumentType
-    );
+    const article = await this.models.Article.create({
+      ...args,
+      author: this.context.user,
+    } as ArticleDocumentType);
     return article.toJsonFor(this.context.user);
   }
   async updateArticle(slug: string, input: UpdateArticleInput) {
