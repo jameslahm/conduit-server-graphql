@@ -9,6 +9,12 @@ import { DBAPI } from "./datasources";
 import { resolvers } from "./resolvers";
 import mongoose from "mongoose";
 import responseCachePlugin from "apollo-server-plugin-response-cache";
+import {
+  APIGatewayProxyEvent,
+  Context,
+  Callback,
+  APIGatewayProxyResult,
+} from "aws-lambda";
 
 dotenv.config();
 mongoose.set("useFindAndModify", false);
@@ -70,4 +76,12 @@ const server = new ApolloServer({
 //   console.log("Listening on http://localhost:4000");
 // });
 
-exports.handler = server.createHandler();
+const func = server.createHandler();
+exports.handler = (
+  event: APIGatewayProxyEvent,
+  context: Context,
+  callback: Callback<APIGatewayProxyResult>
+) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  func(event, context, callback);
+};
