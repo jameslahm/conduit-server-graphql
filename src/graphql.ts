@@ -19,7 +19,6 @@ import {
 dotenv.config();
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
-console.log(process.env.MONGODBURI);
 mongoose
   .connect(process.env.MONGODBURI, {
     useNewUrlParser: true,
@@ -76,7 +75,12 @@ const server = new ApolloServer({
 //   console.log("Listening on http://localhost:4000");
 // });
 
-const func = server.createHandler();
+const func = server.createHandler({
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
 exports.handler = (
   event: APIGatewayProxyEvent,
   context: Context,
