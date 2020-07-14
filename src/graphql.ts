@@ -61,10 +61,10 @@ const server = new ApolloServer({
     return context;
   },
   plugins: [
-    // responseCachePlugin({
-    //   sessionId: (requestContext) =>
-    //     requestContext.request.http?.headers.get("authorization") || null,
-    // }),
+    responseCachePlugin({
+      sessionId: (requestContext) =>
+        requestContext.request.http?.headers.get("authorization") || null,
+    }),
   ],
   cacheControl: {
     defaultMaxAge: 30,
