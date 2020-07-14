@@ -34,9 +34,9 @@ const server = new ApolloServer({
   dataSources: () => ({
     dbAPI: new DBAPI({ User, Article, Comment }),
   }),
-  context: async ({ req }) => {
+  context: async ({ event }) => {
     const context: TContext = { user: undefined };
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = event.headers.authorization?.split(" ")[1];
     if (token) {
       try {
         const payload = jwt.verify(token, process.env.SECRET) as { id: string };
