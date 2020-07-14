@@ -7,7 +7,7 @@ import { User, Article, Comment } from "./models";
 import { TContext } from "./config";
 import { DBAPI } from "./datasources";
 import { resolvers } from "./resolvers";
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import responseCachePlugin from "apollo-server-plugin-response-cache";
 import {
   APIGatewayProxyEvent,
@@ -81,11 +81,15 @@ const func = server.createHandler({
     credentials: true,
   },
 });
-exports.handler = (
+exports.handler = async (
   event: APIGatewayProxyEvent,
   context: Context,
   callback: Callback<APIGatewayProxyResult>
 ) => {
+  const state = mongoose.connection.readyState;
+  if (state === 0 || state === 3) {
+    await mongoose.connect(process.env.MONGODBURI);
+  }
   context.callbackWaitsForEmptyEventLoop = false;
   func(event, context, callback);
 };
