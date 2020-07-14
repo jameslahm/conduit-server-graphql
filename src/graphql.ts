@@ -86,10 +86,13 @@ exports.handler = async (
   context: Context,
   callback: Callback<APIGatewayProxyResult>
 ) => {
+  context.callbackWaitsForEmptyEventLoop = false;
   const state = mongoose.connection.readyState;
   if (state === 0 || state === 3) {
-    await mongoose.connect(process.env.MONGODBURI);
+    await mongoose.connect(process.env.MONGODBURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
   }
-  context.callbackWaitsForEmptyEventLoop = false;
   func(event, context, callback);
 };
