@@ -13,6 +13,7 @@ import responseCachePlugin from "apollo-server-plugin-response-cache";
 dotenv.config();
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
+console.log(process.env.MONGODBURI);
 mongoose
   .connect(process.env.MONGODBURI, {
     useNewUrlParser: true,
