@@ -103,12 +103,15 @@ const typedefs = gql`
 
   type Query {
     getCurrentUser: User @auth
-    getProfile(username: String!): Profile
+    getProfile(username: String!): Profile @cacheControl(maxAge: 30)
     getAllArticles(input: GetAllArticlesInput!): MultipleArticles
-    getFeedArticles(input: GetFeedArticlesInput!): MultipleArticles @auth
-    getArticle(slug: String!): Article
-    getComments(slug: String): MultipleComments
-    getTags: [String]
+      @cacheControl(maxAge: 30)
+    getFeedArticles(input: GetFeedArticlesInput!): MultipleArticles
+      @auth
+      @cacheControl(maxAge: 30)
+    getArticle(slug: String!): Article @cacheControl(maxAge: 30)
+    getComments(slug: String): MultipleComments @cacheControl(maxAge: 30)
+    getTags: [String] @cacheControl(maxAge: 30)
   }
 
   type Mutation {

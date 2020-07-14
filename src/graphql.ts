@@ -1,4 +1,4 @@
-import { ApolloServer, AuthenticationError } from "apollo-server";
+import { ApolloServer, AuthenticationError } from "apollo-server-lambda";
 import { typedefs, AuthDirective } from "./schema";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -8,6 +8,7 @@ import { TContext } from "./config";
 import { DBAPI } from "./datasources";
 import { resolvers } from "./resolvers";
 import mongoose from "mongoose";
+import responseCachePlugin from "apollo-server-plugin-response-cache";
 
 dotenv.config();
 mongoose.set("useFindAndModify", false);
@@ -53,8 +54,19 @@ const server = new ApolloServer({
     }
     return context;
   },
+  plugins: [
+    responseCachePlugin({
+      sessionId: (requestContext) =>
+        requestContext.request.http?.headers.get("authorization") || null,
+    }),
+  ],
+  cacheControl: {
+    defaultMaxAge: 30,
+  },
 });
 
-server.listen(4000).then(() => {
-  console.log("Listening on http://localhost:4000");
-});
+// server.listen(4000).then(() => {
+//   console.log("Listening on http://localhost:4000");
+// });
+
+exports.handler = server.createHandler();

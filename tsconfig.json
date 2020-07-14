@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
-    "outDir": "dist",
+    "outDir": "functions/graphql",
     "target": "ES6",
     "sourceMap": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]

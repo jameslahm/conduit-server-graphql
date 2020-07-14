@@ -17,10 +17,7 @@ import {
   UpdateArticleInput,
   AddCommentInput,
 } from "../types/graphql";
-import { threadId } from "worker_threads";
 import { NotFoundError } from "../utils";
-import { throws } from "assert";
-import { off } from "process";
 
 export class DBAPI extends DataSource {
   context!: TContext;
