@@ -7,7 +7,7 @@ import { User, Article, Comment } from "./models";
 import { TContext } from "./config";
 import { DBAPI } from "./datasources";
 import { resolvers } from "./resolvers";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import responseCachePlugin from "apollo-server-plugin-response-cache";
 import {
   APIGatewayProxyEvent,
@@ -61,10 +61,10 @@ const server = new ApolloServer({
     return context;
   },
   plugins: [
-    responseCachePlugin({
-      sessionId: (requestContext) =>
-        requestContext.request.http?.headers.get("authorization") || null,
-    }),
+    // responseCachePlugin({
+    //   sessionId: (requestContext) =>
+    //     requestContext.request.http?.headers.get("authorization") || null,
+    // }),
   ],
   cacheControl: {
     defaultMaxAge: 30,
@@ -77,22 +77,15 @@ const server = new ApolloServer({
 
 const func = server.createHandler({
   cors: {
-    origin: true,
+    origin: "*",
     credentials: true,
   },
 });
-exports.handler = async (
+exports.handler = (
   event: APIGatewayProxyEvent,
   context: Context,
   callback: Callback<APIGatewayProxyResult>
 ) => {
   context.callbackWaitsForEmptyEventLoop = false;
-  const state = mongoose.connection.readyState;
-  if (state === 0 || state === 3) {
-    await mongoose.connect(process.env.MONGODBURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  }
   func(event, context, callback);
 };
