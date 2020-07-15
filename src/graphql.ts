@@ -28,6 +28,8 @@ mongoose
     console.log(err);
   });
 
+process.env.NODE_ENV = "production";
+
 const server = new ApolloServer({
   typeDefs: typedefs,
   // engine: {
