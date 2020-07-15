@@ -30,7 +30,7 @@ mongoose
     console.log(err);
   });
 
-process.env.NODE_ENV = "production";
+// process.env.NODE_ENV = "production";
 
 const server = new ApolloServer({
   cache: new RedisCache({
