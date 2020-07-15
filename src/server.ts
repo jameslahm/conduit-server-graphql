@@ -11,13 +11,6 @@ import mongoose from "mongoose";
 import responseCachePlugin from "apollo-server-plugin-response-cache";
 import { RedisCache } from "apollo-server-cache-redis";
 
-import {
-  APIGatewayProxyEvent,
-  Context,
-  Callback,
-  APIGatewayProxyResult,
-} from "aws-lambda";
-
 dotenv.config();
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
