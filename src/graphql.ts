@@ -69,7 +69,7 @@ const server = new ApolloServer({
     }),
   ],
   cacheControl: {
-    defaultMaxAge: 30,
+    defaultMaxAge: 0,
   },
 });
 
