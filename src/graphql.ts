@@ -75,9 +75,9 @@ const server = new ApolloServer({
         requestContext.request.http?.headers.get("authorization") || null,
     }),
   ],
-  cacheControl: {
-    defaultMaxAge: 30,
-  },
+  // cacheControl: {
+  //   defaultMaxAge: 30,
+  // },
 });
 
 // server.listen(4000).then(() => {

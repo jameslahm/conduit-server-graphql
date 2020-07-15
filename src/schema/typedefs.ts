@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
 
 const typedefs = gql`
-  type User {
+  type User @cacheControl(maxAge: 30) {
     id: ID!
     email: String!
     token: String!
@@ -10,7 +10,7 @@ const typedefs = gql`
     image: String!
   }
 
-  type Profile {
+  type Profile @cacheControl(maxAge: 30) {
     id: ID!
     username: String!
     bio: String!
@@ -18,7 +18,7 @@ const typedefs = gql`
     following: Boolean!
   }
 
-  type Article {
+  type Article @cacheControl(maxAge: 30) {
     id: ID!
     slug: String!
     title: String!
@@ -32,12 +32,12 @@ const typedefs = gql`
     author: Profile!
   }
 
-  type MultipleArticles {
+  type MultipleArticles @cacheControl(maxAge: 30) {
     articles: [Article]!
     articlesCount: Int!
   }
 
-  type Comment {
+  type Comment @cacheControl(maxAge: 30) {
     id: ID!
     createdAt: String!
     updatedAt: String!
@@ -45,7 +45,7 @@ const typedefs = gql`
     author: Profile!
   }
 
-  type MultipleComments {
+  type MultipleComments @cacheControl(maxAge: 30) {
     comments: [Comment]!
   }
 
@@ -103,15 +103,14 @@ const typedefs = gql`
 
   type Query {
     getCurrentUser: User @auth
-    getProfile(username: String!): Profile @cacheControl(maxAge: 30)
+    getProfile(username: String!): Profile
     getAllArticles(input: GetAllArticlesInput!): MultipleArticles
-      @cacheControl(maxAge: 30)
     getFeedArticles(input: GetFeedArticlesInput!): MultipleArticles
       @auth
-      @cacheControl(maxAge: 30)
-    getArticle(slug: String!): Article @cacheControl(maxAge: 30)
-    getComments(slug: String): MultipleComments @cacheControl(maxAge: 30)
-    getTags: [String] @cacheControl(maxAge: 30)
+      @cacheControl(maxAge: 30, scope: PRIVATE)
+    getArticle(slug: String!): Article
+    getComments(slug: String): MultipleComments
+    getTags: [String]
   }
 
   type Mutation {
