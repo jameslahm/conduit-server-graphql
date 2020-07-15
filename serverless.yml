@@ -1,0 +1,19 @@
+# serverless.yml
+
+service: conduit-apollo-lambda
+provider:
+  name: aws
+  runtime: nodejs12.x
+functions:
+  graphql:
+    # this is formatted as <FILENAME>.<HANDLER>
+    handler: dist/graphql.handler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true

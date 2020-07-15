@@ -33,11 +33,11 @@ mongoose
 // process.env.NODE_ENV = "production";
 
 const server = new ApolloServer({
-  cache: new RedisCache({
-    host: process.env.REDIS_URI,
-    port: parseInt(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD,
-  }),
+  // cache: new RedisCache({
+  //   host: process.env.REDIS_URI,
+  //   port: parseInt(process.env.REDIS_PORT),
+  //   password: process.env.REDIS_PASSWORD,
+  // }),
   typeDefs: typedefs,
   // engine: {
   //   reportSchema: true,
