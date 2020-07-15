@@ -1,4 +1,4 @@
-import { ApolloServer, AuthenticationError } from "apollo-server-lambda";
+import { ApolloServer, AuthenticationError } from "apollo-server";
 import { typedefs, AuthDirective } from "./schema";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -10,13 +10,13 @@ import { resolvers } from "./resolvers";
 import mongoose from "mongoose";
 import responseCachePlugin from "apollo-server-plugin-response-cache";
 import { RedisCache } from "apollo-server-cache-redis";
+
 import {
   APIGatewayProxyEvent,
   Context,
   Callback,
   APIGatewayProxyResult,
 } from "aws-lambda";
-import { profileEnd } from "console";
 
 dotenv.config();
 mongoose.set("useFindAndModify", false);
@@ -49,9 +49,9 @@ const server = new ApolloServer({
   dataSources: () => ({
     dbAPI: new DBAPI({ User, Article, Comment }),
   }),
-  context: async ({ event }) => {
+  context: async ({ req }) => {
     const context: TContext = { user: undefined };
-    const token = event.headers.authorization?.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (token) {
       try {
         const payload = jwt.verify(token, process.env.SECRET) as { id: string };
@@ -80,21 +80,21 @@ const server = new ApolloServer({
   },
 });
 
-// server.listen(4000).then(() => {
-//   console.log("Listening on http://localhost:4000");
-// });
-
-const func = server.createHandler({
-  cors: {
-    origin: "*",
-    credentials: true,
-  },
+server.listen(4000).then(() => {
+  console.log("Listening on http://localhost:4000");
 });
-exports.handler = (
-  event: APIGatewayProxyEvent,
-  context: Context,
-  callback: Callback<APIGatewayProxyResult>
-) => {
-  context.callbackWaitsForEmptyEventLoop = false;
-  func(event, context, callback);
-};
+
+// const func = server.createHandler({
+//   cors: {
+//     origin: "*",
+//     credentials: true,
+//   },
+// });
+// exports.handler = (
+//   event: APIGatewayProxyEvent,
+//   context: Context,
+//   callback: Callback<APIGatewayProxyResult>
+// ) => {
+//   context.callbackWaitsForEmptyEventLoop = false;
+//   func(event, context, callback);
+// };

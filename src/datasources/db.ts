@@ -78,7 +78,7 @@ export class DBAPI extends DataSource {
       .populate("author");
     return {
       articles: articles.map((article) => article.toJsonFor(this.context.user)),
-      articlesCount: await this.models.Article.countDocuments(),
+      articlesCount: await this.models.Article.countDocuments(queryArgs),
     };
   }
   async getFeedArticles(args: GetFeedArticlesInput) {

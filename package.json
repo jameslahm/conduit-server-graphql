@@ -28,6 +28,7 @@
   "dependencies": {
     "apollo-datasource": "^0.7.2",
     "apollo-server": "^2.15.1",
+    "apollo-server-cache-redis": "^1.2.2",
     "apollo-server-lambda": "^2.15.1",
     "apollo-server-plugin-response-cache": "^0.5.3",
     "bcryptjs": "^2.4.3",
@@ -46,6 +47,7 @@
     "@graphql-codegen/typescript": "^1.16.3",
     "@graphql-codegen/typescript-resolvers": "^1.16.3",
     "@types/bcryptjs": "^2.4.2",
+    "@types/ioredis": "^4.17.2",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.31",
     "@types/mongoose-unique-validator": "^1.0.4",
